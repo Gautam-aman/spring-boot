@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -48,7 +49,10 @@ class PluginXmlParser {
 
 	Plugin parse(File pluginXml) {
 		try {
-			Node root = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pluginXml);
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			Node root = factory.newDocumentBuilder().parse(pluginXml);
 			List<Mojo> mojos = parseMojos(root);
 			return new Plugin(textAt("//plugin/groupId", root), textAt("//plugin/artifactId", root),
 					textAt("//plugin/version", root), textAt("//plugin/goalPrefix", root), mojos);

@@ -35,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -676,7 +677,10 @@ public class Library {
 
 		private String propertyFrom(File pomFile) {
 			try {
-				DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+				dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+				DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
 				Document document = documentBuilder.parse(pomFile);
 				XPath xpath = XPathFactory.newInstance().newXPath();
 				return xpath.evaluate("/project/properties/" + this.name + "/text()", document);

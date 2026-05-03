@@ -26,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -93,9 +94,10 @@ final class MavenMetadataVersionResolver implements VersionResolver {
 			}
 			HttpEntity<Void> request = new HttpEntity<>(headers);
 			String metadata = this.rest.exchange(url, HttpMethod.GET, request, String.class).getBody();
-			Document metadataDocument = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder()
-				.parse(new InputSource(new StringReader(metadata)));
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			Document metadataDocument = factory.newDocumentBuilder().parse(new InputSource(new StringReader(metadata)));
 			NodeList versionNodes = (NodeList) XPathFactory.newInstance()
 				.newXPath()
 				.evaluate("/metadata/versioning/versions/version", metadataDocument, XPathConstants.NODESET);
