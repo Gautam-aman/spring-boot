@@ -26,11 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -51,6 +48,7 @@ import org.springframework.boot.build.bom.ResolvedBom.Id;
 import org.springframework.boot.build.bom.ResolvedBom.JavadocLink;
 import org.springframework.boot.build.bom.ResolvedBom.Links;
 import org.springframework.boot.build.bom.ResolvedBom.ResolvedLibrary;
+import org.springframework.boot.build.xml.XmlDocument;
 
 /**
  * Creates a {@link ResolvedBom resolved bom}.
@@ -68,15 +66,7 @@ class BomResolver {
 	BomResolver(ConfigurationContainer configurations, DependencyHandler dependencies) {
 		this.configurations = configurations;
 		this.dependencies = dependencies;
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-			this.documentBuilder = factory.newDocumentBuilder();
-		}
-		catch (ParserConfigurationException ex) {
-			throw new RuntimeException(ex);
-		}
+		this.documentBuilder = XmlDocument.builder();
 	}
 
 	ResolvedBom resolve(BomExtension bomExtension) {
