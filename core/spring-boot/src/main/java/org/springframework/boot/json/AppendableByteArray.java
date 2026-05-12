@@ -25,6 +25,8 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -36,7 +38,7 @@ import org.springframework.util.Assert;
  */
 class AppendableByteArray implements Appendable {
 
-	private static ThreadLocal<SoftReference<AppendableByteArray>> cache = new ThreadLocal<>();
+	private static final ThreadLocal<@Nullable SoftReference<AppendableByteArray>> cache = new ThreadLocal<>();
 
 	private static final int DEFAULT_INITIAL_SIZE = 8192;
 
@@ -66,7 +68,7 @@ class AppendableByteArray implements Appendable {
 	}
 
 	@Override
-	public AppendableByteArray append(CharSequence charSequence, int start, int end) throws IOException {
+	public AppendableByteArray append(@Nullable CharSequence charSequence, int start, int end) throws IOException {
 		return append(((charSequence != null) ? charSequence : "null").subSequence(start, end));
 	}
 

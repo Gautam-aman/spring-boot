@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class AppendableByteArrayTests {
 
-	private static String string = """
+	private static final String string = """
 			This is a long(ish) string.
 			At least it's longer that the initial size and the overflow size.
 			We can write it out and test if the bytes match.
