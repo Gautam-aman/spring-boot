@@ -33,7 +33,6 @@ import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencyResolveDetails;
 import org.gradle.api.artifacts.ModuleVersionSelector;
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
-import org.gradle.api.artifacts.result.DependencyResult;
 import org.gradle.api.artifacts.result.ResolvedComponentResult;
 import org.jspecify.annotations.Nullable;
 
@@ -141,9 +140,8 @@ final class ProtobufPluginAction implements PluginApplicationAction {
 				.getByName("runtimeClasspath")
 				.getIncoming()
 				.getResolutionResult()
-				.getAllDependencies()
+				.getAllComponents()
 				.stream()
-				.map(DependencyResult::getFrom)
 				.map(ResolvedComponentResult::getId)
 				.filter(ModuleComponentIdentifier.class::isInstance)
 				.map(ModuleComponentIdentifier.class::cast)
